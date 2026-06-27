@@ -1,168 +1,265 @@
 # StudyMate AI 🎓🤖
 
-StudyMate AI is a premium, multi-agent learning coach designed to help students prepare for upcoming exams. Powered by Google Gemini (using the `gemini-2.5-flash` model), the application organizes schedules, builds revision timelines, compiles interactive multiple-choice practice quizzes, and provides mindset pep-talks and cognitive study tips in a responsive, glassmorphic dark-theme dashboard.
+StudyMate AI is a multi-agent learning coach designed to help students prepare for upcoming exams. Powered by Google Gemini (using the **gemini-2.5-flash** model), the application creates personalized study schedules, builds revision timelines, generates interactive multiple-choice quizzes, and provides motivational study tips through a responsive dark-themed dashboard.
 
 ---
 
-## 🚀 Quickstart Guide
+# 📖 Overview
 
-### Prerequisites
-- **Node.js** (v18.0.0 or higher)
-- **Google Gemini API Key** (Obtain a key for free from [Google AI Studio](https://aistudio.google.com))
+Preparing for exams requires students to manage study schedules, revise topics regularly, practice questions, and stay motivated. Most existing study tools solve only one of these problems, forcing students to switch between multiple applications.
 
-### 1. Installation
-Clone or navigate to the project directory and install the necessary dependencies:
+StudyMate AI brings these essential learning activities together in one application using a **multi-agent architecture**. Each AI agent performs a specialized task, allowing students to receive a complete study kit with a single request.
+
+This project was built as the capstone project for Kaggle's **5-Day AI Agents: Intensive Vibe Coding Course with Google**.
+
+---
+
+# ✨ Features
+
+* 📅 Personalized Study Planner
+* 📝 AI-generated Practice Quiz
+* 📖 Revision Timeline
+* 💡 Motivation & Study Tips
+* 🤖 Multi-Agent Architecture
+* 🌙 Responsive Glassmorphism Dashboard
+* 🔒 Secure Backend API Integration
+
+---
+
+# 🚀 Quickstart Guide
+
+## Prerequisites
+
+* Node.js (v18.0.0 or higher)
+* Google Gemini API Key (Obtain a free API key from Google AI Studio)
+
+---
+
+## 1. Installation
+
+Clone or navigate to the project directory and install the necessary dependencies.
+
 ```bash
 npm install
 ```
 
-### 2. Configure Environment Variables
-Copy the `.env.example` file to create a `.env` file:
+---
+
+## 2. Configure Environment Variables
+
+Copy the `.env.example` file to create a `.env` file.
+
 ```bash
 cp .env.example .env
 ```
-Open the `.env` file and replace the placeholder with your actual Gemini API Key:
+
+Replace the placeholder with your own Gemini API key.
+
 ```env
 GEMINI_API_KEY=AIzaSyYourActualKeyHere...
 PORT=3000
 ```
 
-### 3. Run the Application
-Start the local development server:
+---
+
+## 3. Run the Application
+
 ```bash
 npm run dev
+
 # or
+
 npm start
 ```
-Once started, open your browser and navigate to:
-👉 **[http://localhost:3000](http://localhost:3000)**
+
+Open your browser:
+
+```
+http://localhost:3000
+```
 
 ---
 
-## 📂 Project Structure
-
-The project is structured logically separating the Express backend, Gemini system prompts, and the single-page web assets:
+# 📂 Project Structure
 
 ```
 StudyMate-AI/
-├── agents/                     # Multi-Agent systems (Gemini prompts + JSON output schemas)
-│   ├── PlannerAgent.js         # Creates daily calendars based on study budget
-│   ├── QuizAgent.js            # Formulates interactive multiple-choice quizzes
-│   ├── RevisionAgent.js        # Maps spaced-repetition timelines leading to exam
-│   └── MotivationAgent.js      # Generates pep-talks, tips, and quick boosts
-├── public/                     # Static frontend resources served by Express
-│   ├── index.html              # HTML structure (sidebar inputs + result tab grids)
-│   ├── style.css               # Modern glassmorphic style & dark theme dashboard styling
-│   └── app.js                  # Frontend controller: API calls & interactive quiz manager
-├── .env.example                # Template of environment variables
-├── .env                        # Local environment file containing credentials (ignored by git)
-├── .gitignore                  # Git ignore definitions
-├── package.json                # Project dependencies and running scripts
-├── server.js                   # Entry point: Express server & Agent orchestrator
-└── README.md                   # Project documentation (this file)
+├── agents/
+│   ├── PlannerAgent.js
+│   ├── QuizAgent.js
+│   ├── RevisionAgent.js
+│   └── MotivationAgent.js
+├── public/
+│   ├── index.html
+│   ├── style.css
+│   └── app.js
+├── .env.example
+├── .gitignore
+├── package.json
+├── server.js
+└── README.md
 ```
 
 ---
 
-## 🏛️ System Architecture
+# 🏛️ System Architecture
 
-StudyMate AI uses a **parallel multi-agent orchestration architecture** on the Node.js backend. When a student enters their exam criteria, the backend splits the task among four specialized agents.
+StudyMate AI follows a **parallel multi-agent architecture**.
+
+When the user submits study details, the Express.js backend coordinates four specialized AI agents simultaneously using **Promise.all()**. Each agent focuses on one responsibility and the results are merged into a unified study dashboard.
 
 ```
-       ┌────────────────────────────────────────────────────────┐
-       │                 Web Client (HTML/CSS/JS)               │
-       └───────────────────────────┬────────────────────────────┘
-                                   │ (POST /api/generate)
-                                   ▼
-       ┌────────────────────────────────────────────────────────┐
-       │             Express Orchestrator (server.js)           │
-       └─────┬─────────────────────┬──────────────────────┬─────┘
-             │                     │                      │
-     (Promise.all Parallel Execution)                     │
-             │                     │                      │
-             ▼                     ▼                      ▼
-  ┌──────────────────┐  ┌──────────────────┐  ┌──────────────────┐  ┌──────────────────┐
-  │  Planner Agent   │  │    Quiz Agent    │  │  Revision Agent  │  │ Motivation Agent │
-  │  (Planner.js)    │  │    (Quiz.js)     │  │  (Revision.js)   │  │  (Motivation.js) │
-  └──────────┬───────┘  └──────────┬───────┘  └──────────┬───────┘  └──────────┬───────┘
-             │                     │                      │                      │
-             └─────────────────┐   │   ┌──────────────────┘                      │
-                               ▼   ▼   ▼   ▼
-                        ┌──────────────────────────┐
-                        │   Google Gemini API      │
-                        │   (gemini-2.5-flash)     │
-                        └──────────────────────────┘
+User
+   │
+   ▼
+Frontend (HTML/CSS/JavaScript)
+   │
+POST /api/generate
+   │
+   ▼
+Express Backend (server.js)
+   │
+   ├── Planner Agent
+   ├── Quiz Agent
+   ├── Revision Agent
+   └── Motivation Agent
+          │
+          ▼
+ Google Gemini API
+          │
+          ▼
+ Combined Dashboard Response
 ```
-
-### The 4 Agents and their prompts:
-1. **Planner Agent** (`agents/PlannerAgent.js`): Analyzes the date gap and daily hours budget. It outputs a structured, chronological daily study block showing timeslots, activity descriptions, and task types (e.g. Core Study, Active Recall, practice).
-2. **Quiz Agent** (`agents/QuizAgent.js`): Curates 5 custom multiple-choice questions assessing deep comprehension rather than simple recall. It outputs options labeled A to D, correct answers, and instructional concept explanations.
-3. **Revision Agent** (`agents/RevisionAgent.js`): Utilizes cognitive science (spaced repetition & active recall) to divide the preparation schedule into countdown milestones (e.g., 7 days before, 3 days before) and prescribes exam-day tips (night before, morning of).
-4. **Motivation Agent** (`agents/MotivationAgent.js`): Generates a custom pep talk referencing the subject's challenges, specific tips (e.g., Feynman Technique, visualization), and can be queried independently via the sidebar for quick motivation boosts.
 
 ---
 
-## 📡 API Endpoints
+# 🤖 Multi-Agent Design
 
-### 1. `POST /api/generate`
-Orchestrates a full multi-agent generation cycle.
-- **Request Body**:
-  ```json
-  {
-    "subject": "Chemistry",
-    "topic": "Organic Reactions",
-    "examDate": "2026-07-15",
-    "dailyHours": 4
-  }
-  ```
-- **Response Structure**:
-  ```json
-  {
-    "success": true,
-    "data": {
-      "planner": { ... },
-      "quiz": { ... },
-      "revision": { ... },
-      "motivation": { ... }
-    }
-  }
-  ```
+### Planner Agent
 
-### 2. `GET /api/motivation-boost`
-Returns a single motivational mindset booster. Used by the "Quick Pep Boost" button.
-- **Response Structure**:
-  ```json
-  {
-    "success": true,
-    "data": {
-      "quote": "Success is not final, failure is not fatal...",
-      "author": "Winston Churchill",
-      "microTip": "Clear your workspace of all screens for the next 45 minutes."
-    }
-  }
-  ```
+Creates a personalized study schedule based on the selected subject, topic, exam date, and daily study hours.
+
+### Quiz Agent
+
+Generates multiple-choice questions with answer options and explanations.
+
+### Revision Agent
+
+Creates a structured revision timeline using spaced repetition and active recall techniques.
+
+### Motivation Agent
+
+Provides personalized motivational messages and practical study tips.
 
 ---
 
-## ☁️ Deployment Strategy
+# 📡 API Endpoints
 
-StudyMate AI is designed as a self-contained, unified Node.js package, making deployment easy:
+## POST `/api/generate`
 
-### Deploy to Render or Heroku
-1. Push the code repository to GitHub.
-2. Link your repository to **[Render](https://render.com/)** (as a **Web Service**) or **[Heroku](https://www.heroku.com/)**.
-3. Set the **Build Command** to:
-   ```bash
-   npm install
-   ```
-4. Set the **Start Command** to:
-   ```bash
-   npm start
-   ```
-5. Add your `GEMINI_API_KEY` to the **Environment Variables** in the service dashboard settings.
+Generates the complete study kit.
 
-### Deploy to Vercel
-Vercel supports Serverless Functions out-of-the-box.
-1. Install Vercel CLI or import your GitHub project into the Vercel Dashboard.
-2. Ensure you add `GEMINI_API_KEY` to Vercel's **Environment Variables** panel in the settings.
-3. Deploy directly. Vercel automatically matches Express configurations when defined properly.
+Example Request
+
+```json
+{
+  "subject": "Chemistry",
+  "topic": "Organic Reactions",
+  "examDate": "2026-07-15",
+  "dailyHours": 4
+}
+```
+
+Example Response
+
+```json
+{
+  "success": true,
+  "data": {
+    "planner": {},
+    "quiz": {},
+    "revision": {},
+    "motivation": {}
+  }
+}
+```
+
+---
+
+## GET `/api/motivation-boost`
+
+Returns a quick motivational message for the student.
+
+---
+
+# 🔒 Security
+
+The project follows standard backend security practices.
+
+* Gemini API key is stored securely using environment variables.
+* Sensitive files are excluded using `.gitignore`.
+* API requests are processed only through the Express backend.
+* API credentials are never exposed to the frontend.
+* `.env.example` is included for safe project setup.
+
+---
+
+# ☁️ Deployment
+
+The application can be deployed easily on platforms such as:
+
+* Render
+* Railway
+* Vercel
+
+Deployment Steps
+
+1. Push the repository to GitHub.
+2. Connect the repository to your hosting platform.
+3. Set:
+
+Build Command
+
+```bash
+npm install
+```
+
+Start Command
+
+```bash
+npm start
+```
+
+4. Add the `GEMINI_API_KEY` as an Environment Variable.
+
+---
+
+# 📚 What I Learned
+
+This project helped me gain practical experience with:
+
+* Multi-Agent AI Architecture
+* Google Gemini API Integration
+* Express.js Backend Development
+* Environment Variable Management
+* Secure API Handling
+* Modular Application Design
+* AI-powered Educational Applications
+
+---
+
+# 🚀 Future Improvements
+
+* User authentication
+* Progress tracking
+* Previous-year question generation
+* PDF export for study plans
+* Performance analytics
+* Voice interaction
+* Multi-language support
+
+---
+
+# 📄 License
+
+This project was developed for educational purposes as part of Kaggle's **5-Day AI Agents: Intensive Vibe Coding Course with Google**.
