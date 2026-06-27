@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="StudyMate AI - A multi-agent learning coach that creates personalized schedules, practice quizzes, revision timelines, and motivational pep-talks powered by Google Gemini.">
+  <title>StudyMate AI - Your Multi-Agent Learning Coach</title>
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <!-- FontAwesome Icons for modern aesthetic -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Vanilla CSS Style -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app-container">
+    <!-- SIDEBAR CONTROL PANEL -->
+    <aside class="sidebar" id="sidebar-panel">
+      <div class="logo-area">
+        <div class="logo-icon">
+          <i class="fa-solid fa-graduation-cap"></i>
+        </div>
+        <div class="logo-text">
+          <h1>StudyMate <span>AI</span></h1>
+          <p>Multi-Agent Learning Coach</p>
+        </div>
+      </div>
+
+      <form id="study-form" class="control-form">
+        <div class="input-group">
+          <label for="input-subject"><i class="fa-solid fa-book-bookmark"></i> Subject</label>
+          <input type="text" id="input-subject" required placeholder="e.g., Computer Science, Biology, History">
+        </div>
+
+        <div class="input-group">
+          <label for="input-topic"><i class="fa-solid fa-lightbulb"></i> Topic</label>
+          <input type="text" id="input-topic" required placeholder="e.g., Data Structures, Genetics, World War II">
+        </div>
+
+        <div class="input-group">
+          <label for="input-exam-date"><i class="fa-solid fa-calendar-days"></i> Exam Date</label>
+          <input type="date" id="input-exam-date" required>
+        </div>
+
+        <div class="input-group">
+          <div class="slider-header">
+            <label for="input-daily-hours"><i class="fa-solid fa-clock"></i> Daily Study Hours</label>
+            <span id="hours-display-value">4 hours</span>
+          </div>
+          <input type="range" id="input-daily-hours" min="1" max="8" value="4" class="range-slider">
+        </div>
+
+        <button type="submit" id="button-submit-form" class="btn-primary">
+          <span>Generate Study Kit</span>
+          <i class="fa-solid fa-wand-magic-sparkles"></i>
+        </button>
+      </form>
+
+      <!-- QUICK BOOST WIDGET -->
+      <div class="motivation-widget" id="quick-boost-widget">
+        <h3><i class="fa-solid fa-bolt text-warning"></i> Quick Pep Boost</h3>
+        <div class="boost-content" id="boost-box">
+          <p class="quote-text">"The secret of getting ahead is getting started."</p>
+          <p class="quote-author">— Mark Twain</p>
+          <div class="micro-tip" id="boost-micro-tip">
+            <strong>Coach Tip:</strong> Break down your large tasks into 15-minute micro-goals.
+          </div>
+        </div>
+        <button id="button-quick-boost" class="btn-secondary">
+          <span>Get Mindset Spark</span>
+          <i class="fa-solid fa-circle-notch fa-spin btn-spinner" id="boost-spinner" style="display: none;"></i>
+        </button>
+      </div>
+    </aside>
+
+    <!-- MAIN DISPLAY AREA -->
+    <main class="main-content" id="main-display-panel">
+      
+      <!-- WELCOME STATE -->
+      <section class="state-container active" id="state-welcome">
+        <div class="welcome-header">
+          <h2>Welcome to StudyMate AI</h2>
+          <p>Your interactive, multi-agent academic study environment. Enter your exam details in the control panel to initialize your study coach team.</p>
+        </div>
+
+        <div class="agents-grid">
+          <div class="agent-card card-planner">
+            <div class="agent-avatar">
+              <i class="fa-solid fa-calendar-check"></i>
+            </div>
+            <h3>Planner Agent</h3>
+            <p>Creates customized daily schedules mapped directly from your current date to your exam. Calibrates time slots based on your study hours.</p>
+          </div>
+
+          <div class="agent-card card-quiz">
+            <div class="agent-avatar">
+              <i class="fa-solid fa-circle-question"></i>
+            </div>
+            <h3>Quiz Agent</h3>
+            <p>Generates active retrieval challenges. Returns an interactive mock quiz with instant visual feedback and comprehensive explanations.</p>
+          </div>
+
+          <div class="agent-card card-revision">
+            <div class="agent-avatar">
+              <i class="fa-solid fa-timeline"></i>
+            </div>
+            <h3>Revision Agent</h3>
+            <p>Applies spaced repetition and cognitive science formulas to generate strategic checklists, timeline milestones, and exam-day checklists.</p>
+          </div>
+
+          <div class="agent-card card-motivation">
+            <div class="agent-avatar">
+              <i class="fa-solid fa-fire"></i>
+            </div>
+            <h3>Motivation Agent</h3>
+            <p>Supplies motivational pep-talks, mindset quotes, and actionable learning strategies specific to the nature of your subject.</p>
+          </div>
+        </div>
+
+        <div class="feature-footer">
+          <p><i class="fa-solid fa-shield-halved"></i> Powered securely by <strong>Google Gemini 1.5 Flash</strong> using API safety controls.</p>
+        </div>
+      </section>
+
+      <!-- LOADING STATE -->
+      <section class="state-container" id="state-loading">
+        <div class="loading-wrapper">
+          <div class="spinner-outer">
+            <div class="spinner-inner"></div>
+            <i class="fa-solid fa-brain brain-pulse"></i>
+          </div>
+          <h2>Orchestrating AI Study Agents</h2>
+          <p>Please wait while the coach agents compile your customized exam preparation kit...</p>
+
+          <div class="agent-progress-list">
+            <div class="progress-step" id="step-planner">
+              <i class="fa-solid fa-circle-notch fa-spin step-status"></i>
+              <span class="step-label">Planner Agent: Structuring study hours...</span>
+            </div>
+            <div class="progress-step" id="step-quiz">
+              <i class="fa-solid fa-circle-notch fa-spin step-status"></i>
+              <span class="step-label">Quiz Agent: Formulating interactive MCQs...</span>
+            </div>
+            <div class="progress-step" id="step-revision">
+              <i class="fa-solid fa-circle-notch fa-spin step-status"></i>
+              <span class="step-label">Revision Agent: Calculating spaced repetition timelines...</span>
+            </div>
+            <div class="progress-step" id="step-motivation">
+              <i class="fa-solid fa-circle-notch fa-spin step-status"></i>
+              <span class="step-label">Motivation Agent: Formulating pep talk and cognitive tips...</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ERROR STATE -->
+      <section class="state-container" id="state-error">
+        <div class="error-wrapper">
+          <i class="fa-solid fa-triangle-exclamation error-icon"></i>
+          <h2>Generation Failed</h2>
+          <p id="error-message-text">Something went wrong while communicating with the agents. Check if the API key in .env is configured correctly.</p>
+          <button id="button-retry" class="btn-primary">Try Again</button>
+        </div>
+      </section>
+
+      <!-- RESULTS STATE -->
+      <section class="state-container" id="state-results">
+        <!-- Dashboard Navigation Tabs -->
+        <nav class="dashboard-tabs">
+          <button class="tab-link active" data-tab="tab-planner" id="tab-btn-planner">
+            <i class="fa-solid fa-calendar-check"></i>
+            <span>Study Plan</span>
+          </button>
+          <button class="tab-link" data-tab="tab-revision" id="tab-btn-revision">
+            <i class="fa-solid fa-timeline"></i>
+            <span>Revision Schedule</span>
+          </button>
+          <button class="tab-link" data-tab="tab-quiz" id="tab-btn-quiz">
+            <i class="fa-solid fa-circle-question"></i>
+            <span>Practice Quiz</span>
+          </button>
+          <button class="tab-link" data-tab="tab-motivation" id="tab-btn-motivation">
+            <i class="fa-solid fa-fire"></i>
+            <span>Motivation & Tips</span>
+          </button>
+        </nav>
+
+        <!-- Dashboard Content Panels -->
+        <div class="dashboard-content">
+          <!-- PLANNER PANEL -->
+          <div class="tab-panel active" id="tab-planner">
+            <div class="panel-header">
+              <div class="title-meta">
+                <span class="badge badge-primary" id="planner-badge-subject">Subject</span>
+                <h2 id="planner-title">Daily Study Schedule</h2>
+              </div>
+              <div class="hours-summary">
+                <i class="fa-solid fa-clock"></i>
+                <span id="planner-summary-hours">4 hours / day</span>
+              </div>
+            </div>
+            
+            <p class="panel-desc" id="planner-summary">Pedagogical strategy summary from your Planner Agent.</p>
+
+            <div class="schedule-grid" id="planner-schedule-container">
+              <!-- Dynamically populated daily schedules -->
+            </div>
+          </div>
+
+          <!-- REVISION PANEL -->
+          <div class="tab-panel" id="tab-revision">
+            <div class="panel-header">
+              <div class="title-meta">
+                <span class="badge badge-success" id="revision-badge-subject">Subject</span>
+                <h2 id="revision-title">Spaced Repetition & Revision</h2>
+              </div>
+              <div class="exam-countdown">
+                <i class="fa-solid fa-hourglass-half"></i>
+                <span id="revision-countdown-text">Exam on: 2026-07-10</span>
+              </div>
+            </div>
+            
+            <div class="revision-layout">
+              <div class="timeline-container" id="revision-milestones-container">
+                <!-- Dynamically populated milestones -->
+              </div>
+              
+              <div class="exam-day-sidebar">
+                <div class="exam-day-card night-before">
+                  <h4><i class="fa-solid fa-moon"></i> Night Before Exam</h4>
+                  <p id="revision-night-before">Getting plenty of sleep is key to consolidation.</p>
+                </div>
+                <div class="exam-day-card morning-of">
+                  <h4><i class="fa-solid fa-sun"></i> Morning of Exam</h4>
+                  <p id="revision-morning-of">Eat a good breakfast, avoid cramming new content.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- QUIZ PANEL -->
+          <div class="tab-panel" id="tab-quiz">
+            <div class="panel-header">
+              <div class="title-meta">
+                <span class="badge badge-warning" id="quiz-badge-subject">Subject</span>
+                <h2 id="quiz-title">Interactive Practice Quiz</h2>
+              </div>
+              <div class="quiz-score-tracker" id="quiz-progress-text">
+                Question 1 of 5
+              </div>
+            </div>
+
+            <div class="quiz-container">
+              <!-- ACTIVE QUIZ WINDOW -->
+              <div id="quiz-active-window">
+                <div class="quiz-progress-bar">
+                  <div class="quiz-progress-fill" id="quiz-progress-fill" style="width: 20%;"></div>
+                </div>
+
+                <div class="quiz-question-box">
+                  <h3 id="quiz-question-text">Question text goes here?</h3>
+                </div>
+
+                <div class="quiz-options-grid" id="quiz-options-container">
+                  <!-- Dynamically populated options buttons -->
+                  <button class="option-btn" id="option-a">Option A</button>
+                  <button class="option-btn" id="option-b">Option B</button>
+                  <button class="option-btn" id="option-c">Option C</button>
+                  <button class="option-btn" id="option-d">Option D</button>
+                </div>
+
+                <div class="quiz-explanation-box" id="quiz-explanation-container" style="display: none;">
+                  <h4><i class="fa-solid fa-circle-info"></i> Explanation</h4>
+                  <p id="quiz-explanation-text">Explanation content explaining the response.</p>
+                </div>
+
+                <div class="quiz-actions">
+                  <button id="button-next-question" class="btn-primary" style="display: none;">
+                    <span>Next Question</span>
+                    <i class="fa-solid fa-arrow-right"></i>
+                  </button>
+                </div>
+              </div>
+
+              <!-- QUIZ RESULTS SCREEN -->
+              <div id="quiz-results-window" style="display: none;">
+                <div class="quiz-score-circle">
+                  <span class="score-number" id="quiz-final-score">4/5</span>
+                  <span class="score-label">Score</span>
+                </div>
+                <h3>Quiz Completed!</h3>
+                <p id="quiz-performance-feedback">Great job! You have a solid understanding of this topic.</p>
+                
+                <button id="button-restart-quiz" class="btn-primary">
+                  <i class="fa-solid fa-rotate-left"></i>
+                  <span>Retake Quiz</span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- MOTIVATION PANEL -->
+          <div class="tab-panel" id="tab-motivation">
+            <div class="panel-header">
+              <div class="title-meta">
+                <span class="badge badge-danger" id="motivation-badge-subject">Subject</span>
+                <h2 id="motivation-title">Mindset & Study Tips</h2>
+              </div>
+            </div>
+
+            <div class="motivation-layout">
+              <!-- Pep talk card -->
+              <div class="pep-talk-card">
+                <div class="quote-mark"><i class="fa-solid fa-quote-left"></i></div>
+                <p id="motivation-pep-talk">Custom encouragement from the Motivation Agent goes here.</p>
+                <div class="quote-source" id="motivation-quote-box">
+                  <span class="quote-symbol">—</span>
+                  <span class="quote-text-inline" id="motivation-quote-text">Believe you can and you're halfway there.</span>
+                  <span class="quote-author-inline" id="motivation-quote-author">(Theodore Roosevelt)</span>
+                </div>
+              </div>
+
+              <!-- Study tips list -->
+              <div class="study-tips-section">
+                <h3><i class="fa-solid fa-graduation-cap"></i> Recommended Study Methods</h3>
+                <div class="tips-grid" id="motivation-tips-container">
+                  <!-- Dynamically populated study tips -->
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      
+    </main>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
